@@ -1,0 +1,195 @@
+@model BarberShopBooking.ViewModels.AppointmentCreateViewModel
+
+@{
+    ViewData["Title"] = "Đặt lịch hẹn";
+}
+
+<section class="booking-page">
+    <div class="container booking-wrapper">
+
+        <div class="booking-left">
+            <span class="booking-label">KD - BARBER SHOP</span>
+            <h1>Đặt lịch cắt tóc chuyên nghiệp</h1>
+            <p>
+                Chọn dịch vụ, chọn thợ cắt tóc (barber) yêu thích và ngày giờ phù hợp.
+                Hệ thống sẽ tự động cập nhật khung giờ còn trống chính xác cho bạn.
+            </p>
+
+            <div class="booking-steps">
+                <div class="step-item">
+                    <i class="fa-solid fa-scissors"></i>
+                    <div>
+                        <h4>1. Chọn dịch vụ & Barber</h4>
+                        <span>Đa dạng dịch vụ từ cắt, gội, uốn nhuộm đến cạo râu.</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <i class="fa-solid fa-clock"></i>
+                    <div>
+                        <h4>2. Chọn khung giờ trống</h4>
+                        <span>Thời gian chính xác theo lịch làm việc của từng thợ.</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div>
+                        <h4>3. Hoàn tất đặt lịch</h4>
+                        <span>Hệ thống sẽ xác nhận ngay khi bạn đăng ký thành công.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-right">
+            <div class="booking-card">
+                <h2>Thông tin đặt lịch</h2>
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <form asp-action="Create" method="post" id="bookingForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group mb-3">
+                        <label asp-for="ServiceId" class="form-label"></label>
+                        <select asp-for="ServiceId" id="serviceSelect" class="form-select" required>
+                            <option value="">-- Chọn dịch vụ --</option>
+                            @foreach (var s in Model.Services)
+                            {
+                                <option value="@s.ServiceId" data-price="@s.Price.ToString("N0")" data-duration="@s.DurationMinutes">
+                                    @s.ServiceName (@s.DurationMinutes phút - @s.Price.ToString("N0") đ)
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="ServiceId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="BarberId" class="form-label"></label>
+                        <select asp-for="BarberId" id="barberSelect" class="form-select" required>
+                            <option value="">-- Chọn barber --</option>
+                            @foreach (var b in Model.Barbers)
+                            {
+                                <option value="@b.BarberId">
+                                    @b.FullName (@b.ExperienceYears năm kinh nghiệm)
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="BarberId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="AppointmentDate" class="form-label"></label>
+                        <input asp-for="AppointmentDate" type="date" id="appointmentDate" class="form-control"
+                               min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label">Chọn khung giờ làm việc còn trống</label>
+                        <input type="hidden" asp-for="AppointmentTime" id="selectedTime" required />
+                        
+                        <div id="slotsContainer" class="time-slots-grid">
+                            <p class="text-muted">Vui lòng chọn dịch vụ, barber và ngày để tải danh sách giờ trống.</p>
+                        </div>
+                        <div id="slotsLoading" class="spinner-border text-warning d-none" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <span asp-validation-for="AppointmentTime" class="text-danger d-block"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Note" class="form-label"></label>
+                        <textarea asp-for="Note" class="form-control" rows="3" placeholder="Ví dụ: muốn cắt kiểu Sidepart, uốn nhẹ..."></textarea>
+                        <span asp-validation-for="Note" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="booking-submit btn btn-warning w-100 py-2 fs-5">
+                        <i class="fa-solid fa-calendar-plus me-2"></i> Xác nhận đặt lịch
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const serviceSelect = document.getElementById("serviceSelect");
+            const barberSelect = document.getElementById("barberSelect");
+            const dateInput = document.getElementById("appointmentDate");
+            const slotsContainer = document.getElementById("slotsContainer");
+            const slotsLoading = document.getElementById("slotsLoading");
+            const timeInput = document.getElementById("selectedTime");
+
+            function fetchAvailableSlots() {
+                const serviceId = serviceSelect.value;
+                const barberId = barberSelect.value;
+                const date = dateInput.value;
+
+                if (!serviceId || !barberId || !date) {
+                    slotsContainer.innerHTML = '<p class="text-muted">Vui lòng chọn đầy đủ Dịch vụ, Barber và Ngày hẹn.</p>';
+                    return;
+                }
+
+                slotsContainer.innerHTML = '';
+                slotsLoading.classList.remove('d-none');
+
+                fetch(`/Appointment/GetAvailableSlots?barberId=${barberId}&serviceId=${serviceId}&date=${date}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        slotsLoading.classList.add('d-none');
+                        slotsContainer.innerHTML = '';
+
+                        if (!data || data.length === 0) {
+                            slotsContainer.innerHTML = '<div class="alert alert-warning w-100">Rất tiếc! Không tìm thấy khung giờ trống vào ngày này (thợ nghỉ làm hoặc đã đầy lịch).</div>';
+                            return;
+                        }
+
+                        let hasAvailable = false;
+                        data.forEach(slot => {
+                            const btn = document.createElement("button");
+                            btn.type = "button";
+                            btn.className = `btn slot-btn me-2 mb-2 ${slot.isAvailable ? 'btn-outline-warning' : 'btn-outline-secondary disabled'}`;
+                            btn.textContent = slot.displayTime;
+                            
+                            if (slot.isAvailable) {
+                                hasAvailable = true;
+                                btn.onclick = function () {
+                                    document.querySelectorAll(".slot-btn").forEach(b => b.classList.remove("active", "btn-warning"));
+                                    document.querySelectorAll(".slot-btn").forEach(b => {
+                                        if(!b.classList.contains("disabled")) b.classList.add("btn-outline-warning");
+                                    });
+                                    btn.classList.remove("btn-outline-warning");
+                                    btn.classList.add("btn-warning", "active");
+                                    timeInput.value = slot.time;
+                                };
+                            } else {
+                                btn.title = slot.reason || "Khung giờ đã bận";
+                            }
+                            slotsContainer.appendChild(btn);
+                        });
+
+                        if (!hasAvailable) {
+                            slotsContainer.insertAdjacentHTML('afterbegin', '<div class="alert alert-warning w-100">Các khung giờ trong ngày đã kín lịch. Vui lòng chọn ngày khác.</div>');
+                        }
+                    })
+                    .catch(err => {
+                        slotsLoading.classList.add('d-none');
+                        slotsContainer.innerHTML = '<p class="text-danger">Không thể tải khung giờ. Vui lòng thử lại sau.</p>';
+                    });
+            }
+
+            serviceSelect.addEventListener("change", fetchAvailableSlots);
+            barberSelect.addEventListener("change", fetchAvailableSlots);
+            dateInput.addEventListener("change", fetchAvailableSlots);
+
+            // Trigger initial fetch if parameters pre-populated
+            fetchAvailableSlots();
+        });
+    </script>
+}

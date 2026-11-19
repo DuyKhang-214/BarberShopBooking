@@ -1,0 +1,56 @@
+@model List<BarberShopBooking.Models.Contact>
+
+@{
+    ViewData["Title"] = "Phản hồi Liên hệ Khách hàng";
+}
+
+<section class="admin-page py-4">
+    <div class="container">
+        <h1 class="text-warning h3 mb-4"><i class="fa-solid fa-envelope-open-text me-2"></i> Phản hồi Liên hệ Khách hàng</h1>
+
+        <div class="table-responsive bg-dark rounded p-3 border border-secondary">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Email & SĐT</th>
+                        <th>Nội dung gửi</th>
+                        <th>Thời gian</th>
+                        <th style="min-width: 250px;">Phản hồi từ Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@c.FullName</strong>
+                                @if (c.User != null)
+                                {
+                                    <br/><small class="text-warning">@@@c.User.Username</small>
+                                }
+                            </td>
+                            <td>
+                                @c.Email
+                                <br/><small class="text-muted">SĐT: @(string.IsNullOrEmpty(c.Phone) ? "-" : c.Phone)</small>
+                            </td>
+                            <td><small>@c.Message</small></td>
+                            <td><small class="text-muted">@c.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
+                            <td>
+                                <form asp-action="Reply" method="post" class="d-flex gap-1 flex-column">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@c.ContactId" />
+                                    <textarea name="replyMessage" class="form-control form-control-sm bg-dark text-white border-secondary" rows="2" placeholder="Nhập nội dung phản hồi..." required>@c.ReplyMessage</textarea>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-info">@(c.RepliedAt.HasValue ? $"Đã trả lời: {c.RepliedAt.Value:dd/MM HH:mm}" : "Chưa phản hồi")</small>
+                                        <button type="submit" class="btn btn-sm btn-warning">Gửi trả lời</button>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

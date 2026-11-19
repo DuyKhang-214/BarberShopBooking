@@ -1,0 +1,35 @@
+@model BarberShopBooking.Models.BarberReview
+
+@{
+    ViewData["Title"] = "Chi tiết đánh giá";
+}
+
+<section class="review-page">
+    <div class="review-card">
+        <h1>Đánh giá của bạn</h1>
+
+        <div class="review-info">
+            <p><b>Barber:</b> @Model.Barber?.FullName</p>
+            <p><b>Dịch vụ:</b> @Model.Appointment?.Service?.ServiceName</p>
+            <p><b>Giá tiền:</b> @String.Format("{0:N0} VNĐ", Model.Appointment?.PriceAtBooking)</p>
+            <p><b>Ngày đánh giá:</b> @Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+        </div>
+
+        <div class="review-stars-view">
+            @for (int i = 1; i <= 5; i++)
+            {
+                <span class="@(i <= Model.Rating ? "star-active" : "")">★</span>
+            }
+        </div>
+
+        <div class="review-comment-box">
+            @(string.IsNullOrWhiteSpace(Model.Comment) ? "Không có nhận xét." : Model.Comment)
+        </div>
+
+        <a asp-controller="Appointment"
+           asp-action="MyAppointments"
+           class="review-back-btn">
+            Quay lại lịch sử
+        </a>
+    </div>
+</section>

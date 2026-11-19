@@ -1,0 +1,46 @@
+:root {
+    --bg-primary: #121212;
+    --bg-card: #1f1f1f;
+    --bg-card-hover: #262626;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-muted: #757575;
+
+    --color-gold: #f5c542;
+    --color-gold-hover: #ffd766;
+    --color-gold-light: rgba(245, 197, 66, 0.15);
+    --color-gold-glow: rgba(245, 197, 66, 0.4);
+
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-gold: #f5c542;
+
+    --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+    --shadow-3d: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 197, 66, 0.15);
+    --shadow-gold: 0 0 25px rgba(245, 197, 66, 0.35);
+
+    --glass-bg: rgba(31, 31, 31, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-backdrop: blur(16px);
+
+    --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-3d: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.5s ease;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}

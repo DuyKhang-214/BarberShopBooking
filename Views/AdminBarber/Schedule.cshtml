@@ -1,0 +1,70 @@
+@model BarberShopBooking.ViewModels.BarberScheduleManageViewModel
+
+@{
+    ViewData["Title"] = $"Lịch làm việc của Barber {Model.BarberName}";
+}
+
+<section class="admin-page py-4">
+    <div class="container" style="max-width: 900px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-warning h3 mb-0">
+                <i class="fa-solid fa-calendar-days me-2"></i> Lịch làm việc tuần: @Model.BarberName
+            </h1>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
+            </a>
+        </div>
+
+        <div class="card bg-dark text-white border-warning p-4 shadow">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <form asp-action="Schedule" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="BarberId" />
+                <input type="hidden" asp-for="BarberName" />
+
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Thứ trong tuần</th>
+                                <th class="text-center">Ngày làm việc</th>
+                                <th>Giờ bắt đầu</th>
+                                <th>Giờ kết thúc</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Schedules.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="hidden" asp-for="Schedules[i].DayOfWeek" />
+                                        <input type="hidden" asp-for="Schedules[i].DayOfWeekName" />
+                                        <strong class="text-warning fs-6">@Model.Schedules[i].DayOfWeekName</strong>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="form-check form-switch d-inline-block">
+                                            <input class="form-check-input" type="checkbox" asp-for="Schedules[i].IsWorkingDay">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="time" asp-for="Schedules[i].StartTime" class="form-control form-control-sm bg-dark text-white border-secondary" required />
+                                    </td>
+                                    <td>
+                                        <input type="time" asp-for="Schedules[i].EndTime" class="form-control form-control-sm bg-dark text-white border-secondary" required />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex gap-2 justify-content-end mt-4">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Lưu lịch làm việc
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

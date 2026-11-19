@@ -1,0 +1,118 @@
+@model List<BarberShopBooking.Models.Service>
+
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<section class="hero">
+    <div class="container">
+        <h1>KD - BARBER BOOKING</h1>
+        <p>Đặt lịch cắt tóc nhanh chóng, chọn dịch vụ và thợ cắt tóc yêu thích.</p>
+
+        <a asp-controller="Appointment" asp-action="Create" class="btn btn-warning btn-lg">
+            Đặt lịch ngay
+        </a>
+
+        <a asp-controller="Service" asp-action="Index" class="btn btn-outline-light btn-lg ms-2">
+            Xem dịch vụ
+        </a>
+    </div>
+</section>
+
+<section class="home-services">
+    <div class="container">
+
+        <div class="section-heading">
+            <span>Dịch vụ nổi bật</span>
+            <h2>Trải nghiệm barber chuyên nghiệp</h2>
+            <p>Chọn nhanh dịch vụ phù hợp và đặt lịch với barber yêu thích.</p>
+        </div>
+
+        <div class="home-service-grid">
+            @if (Model != null)
+            {
+                @foreach (var item in Model)
+            {
+                var iconClass = "fa-solid fa-scissors";
+
+                if (item.ServiceName.Contains("VIP", StringComparison.OrdinalIgnoreCase))
+                {
+                    iconClass = "fa-solid fa-star";
+                }
+                else if (item.ServiceName.Contains("uốn", StringComparison.OrdinalIgnoreCase))
+                {
+                    iconClass = "fa-solid fa-wind";
+                }
+                else if (item.ServiceName.Contains("nhuộm", StringComparison.OrdinalIgnoreCase))
+                {
+                    iconClass = "fa-solid fa-palette";
+                }
+
+                <div class="home-service-card @(item.ServiceName.Contains("uốn", StringComparison.OrdinalIgnoreCase) ? "featured-card" : "")">
+                    @if (item.ServiceName.Contains("uốn", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="service-badge">Phổ biến</div>
+                    }
+
+                    <div class="service-icon">
+                        <i class="@iconClass"></i>
+                    </div>
+
+                    <span class="service-time">@item.DurationMinutes phút</span>
+
+                    <h3>@item.ServiceName</h3>
+
+                    <p>@item.Description</p>
+
+                    <div class="service-price">
+                        @item.Price.ToString("N0") VNĐ
+                    </div>
+
+                    <a asp-controller="Appointment"
+                       asp-action="Create"
+                       asp-route-serviceId="@item.ServiceId"
+                       class="service-book-btn">
+                        Đặt lịch ngay
+                    </a>
+                </div>
+            }
+            }
+        </div>
+    </div>
+</section>
+
+<section class="why-section">
+    <div class="container">
+
+        <h2 class="why-title">
+            Vì sao nên chọn KD - BARBER SHOP ?
+        </h2>
+
+        <div class="why-grid">
+            
+            <div class="why-item">
+                <i class="fa-solid fa-user-check"></i>
+                <h4>Barber chuyên nghiệp</h4>
+                <p>Đội ngũ thợ chuyên nghiệp, có kinh nghiệm, tư vấn kiểu tóc phù hợp.</p>
+            </div>
+            
+            <div class="why-item">
+                <i class="fa-solid fa-clock"></i>
+                <h4>Đặt lịch nhanh</h4>
+                <p>Chọn dịch vụ, barber và thời gian chỉ trong vài bước.</p>
+            </div>
+            
+            <div class="why-item">
+                <i class="fa-solid fa-shield-heart"></i>
+                <h4>Dịch vụ chất lượng</h4>
+                <p>Không gian sạch sẽ thoáng mát, phục vụ tận tình và chu đáo.</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    ...
+</footer>

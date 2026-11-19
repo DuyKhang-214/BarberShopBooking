@@ -1,0 +1,79 @@
+@model List<BarberShopBooking.Models.User>
+
+@{
+    ViewData["Title"] = "Quản lý Tài khoản Người dùng";
+}
+
+<section class="admin-page py-4">
+    <div class="container">
+        <h1 class="text-warning h3 mb-4"><i class="fa-solid fa-users me-2"></i> Quản lý Tài khoản Người dùng</h1>
+
+        <div class="table-responsive bg-dark rounded p-3 border border-secondary">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Tên đăng nhập</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-warning">@@@user.Username</td>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@(string.IsNullOrEmpty(user.Phone) ? "-" : user.Phone)</td>
+                            <td>
+                                <form asp-action="ChangeRole" method="post" class="d-inline-flex gap-1 align-items-center">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.UserId" />
+                                    <select name="role" class="form-select form-select-sm bg-dark text-white border-secondary" style="width: 110px;">
+                                        <option value="Customer" selected="@(user.Role == "Customer")">Customer</option>
+                                        <option value="Admin" selected="@(user.Role == "Admin")">Admin</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Đổi quyền">
+                                        <i class="fa-solid fa-check"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge bg-success">Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Đã khóa</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <form asp-action="ToggleStatus" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn thay đổi trạng thái tài khoản này?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@user.UserId" />
+                                    @if (user.IsActive)
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Khóa tài khoản">
+                                            <i class="fa-solid fa-user-slash"></i> Khóa
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-outline-success" title="Mở khóa tài khoản">
+                                            <i class="fa-solid fa-user-check"></i> Kích hoạt
+                                        </button>
+                                    }
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,51 @@
+@model BarberShopBooking.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<section class="auth-page">
+    <div class="auth-box">
+        <h2>Đăng nhập hệ thống</h2>
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <form asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Password" id="loginPassword" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                    <i class="fa-regular fa-eye-slash toggle-password" data-target="loginPassword"></i>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2">
+                Đăng nhập
+            </button>
+        </form>
+
+        <div class="auth-link mt-4 d-flex justify-content-center align-items-center flex-wrap gap-2">
+            <a asp-controller="Account" asp-action="Register">Đăng ký ngay</a>
+            <span>|</span>
+            <a asp-controller="Account" asp-action="ForgotPassword">Quên mật khẩu?</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Auth.js" asp-append-version="true"></script>
+}

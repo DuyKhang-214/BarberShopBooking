@@ -1,0 +1,86 @@
+@model BarberShopBooking.Models.Contact
+
+@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+<section class="contact-page">
+    <div class="container contact-wrapper">
+
+        <div class="contact-left">
+            <span class="contact-label">KD - BARBER SHOP</span>
+
+            <h1>Liên hệ với chúng tôi</h1>
+
+            <p>
+                Bạn cần tư vấn kiểu tóc, dịch vụ cắt tóc hoặc đặt lịch hẹn?
+                Hãy gửi thông tin cho chúng tôi.
+            </p>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <h4>Địa chỉ</h4>
+                    <span>123 Nguyễn Trãi, Dĩ An, TP.HCM</span>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <h4>Hotline</h4>
+                    <span>0988 333 555</span>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                    <h4>Email</h4>
+                    <span>barbershop@gmail.com</span>
+                </div>
+            </div>
+
+            <div class="contact-map">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5972.016409016729!2d106.75390253734497!3d10.90642487136545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d8502acc549b%3A0x89e925c48142c551!2zTmd1eeG7hW4gVHLDo2ksIETEqSBBbiwgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1780910124633!5m2!1svi!2s"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="contact-form-box">
+            <h2>Gửi tin nhắn</h2>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["Success"]
+                </div>
+            }
+
+            <form asp-action="Index" method="post">
+
+                <label>Họ và tên</label>
+                <input asp-for="FullName" placeholder="Nhập họ và tên" required />
+
+                <label>Email</label>
+                <input asp-for="Email" type="email" placeholder="Nhập email" required />
+
+                <label>Số điện thoại</label>
+                <input asp-for="Phone" placeholder="Nhập số điện thoại" />
+
+                <label>Nội dung</label>
+                <textarea asp-for="Message" rows="5" placeholder="Bạn cần hỗ trợ gì ?" required></textarea>
+
+                <button type="submit">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Gửi ngay
+                </button>
+            </form>
+        </div>
+
+    </div>
+</section>

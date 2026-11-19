@@ -1,0 +1,73 @@
+@model BarberShopBooking.Models.Barber
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thông tin Barber";
+}
+
+<section class="admin-page py-4">
+    <div class="container" style="max-width: 600px;">
+        <div class="card bg-dark text-white border-warning p-4 shadow">
+            <h2 class="text-warning mb-4"><i class="fa-solid fa-pen-to-square me-2"></i> Chỉnh sửa Barber</h2>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="BarberId" />
+                <input type="hidden" asp-for="ImageUrl" />
+
+                <div class="form-group mb-3">
+                    <label asp-for="FullName" class="form-label">Họ và tên *</label>
+                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" required />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Phone" class="form-label">Số điện thoại</label>
+                    <input asp-for="Phone" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ExperienceYears" class="form-label">Số năm kinh nghiệm</label>
+                    <input asp-for="ExperienceYears" type="number" min="0" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="ExperienceYears" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="SkillDescription" class="form-label">Mô tả kỹ năng / Sở trường</label>
+                    <textarea asp-for="SkillDescription" class="form-control bg-dark text-white border-secondary" rows="3"></textarea>
+                    <span asp-validation-for="SkillDescription" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="IsActive" class="form-label">Trạng thái hoạt động</label>
+                    <select asp-for="IsActive" class="form-select bg-dark text-white border-secondary">
+                        <option value="true">Đang làm việc</option>
+                        <option value="false">Tạm ngưng / Nghỉ</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Thay đổi ảnh chân dung (.jpg, .png, .webp)</label>
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.ImageUrl" alt="@Model.FullName" class="rounded" style="height: 80px; object-fit: cover;" />
+                        </div>
+                    }
+                    <input type="file" name="imageFile" class="form-control bg-dark text-white border-secondary" accept="image/*" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning px-4">Lưu thay đổi</button>
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

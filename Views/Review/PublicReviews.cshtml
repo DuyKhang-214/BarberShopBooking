@@ -1,0 +1,77 @@
+@model List<BarberShopBooking.Models.BarberReview>
+
+@{
+    ViewData["Title"] = "Đánh giá";
+}
+
+<section class="public-review-page">
+    <div class="container">
+        <div class="public-review-heading">
+            <h1>Khách hàng nói gì về KD - BARBER</h1>
+            <p>Những trải nghiệm và đánh giá thực tế khi khách hàng sử dụng dịch vụ.</p>
+        </div>
+
+        <div class="public-review-grid">
+            @foreach (var item in Model)
+            {
+                <div class="public-review-card">
+                    <div class="review-user">
+                        <div class="review-avatar">
+                            @(item.User?.FullName?.Substring(0, 1) ?? "K")
+                        </div>
+
+                        <div class="review-info">
+                            <h3>@item.User?.FullName</h3>
+
+                            <div class="barber-name">
+                                Barber :
+                                <span>@item.Barber?.FullName</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= item.Rating ? "active" : "")">★</span>
+                        }
+                    </div>
+
+                    <p class="review-comment">“@item.Comment”</p>
+
+                    <div class="review-footer">
+                        <span>@item.Appointment?.Service?.ServiceName</span>
+                        <small>@item.CreatedAt.ToString("dd/MM/yyyy")</small>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="review-pagination">
+                <a asp-action="PublicReviews"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   class="page-nav @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    ‹ Prev
+                </a>
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <a asp-action="PublicReviews"
+                       asp-route-page="@i"
+                       class="@(ViewBag.CurrentPage == i ? "active" : "")">
+                        @i
+                    </a>
+                }
+
+                <a asp-action="PublicReviews"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   class="page-nav @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                    Next ›
+                </a>
+            </div>
+        }
+        
+    </div>
+</section>

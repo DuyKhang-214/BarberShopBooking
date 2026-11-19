@@ -1,0 +1,144 @@
+@model List<BarberShopBooking.Models.Appointment>
+
+@{
+    ViewData["Title"] = "Lịch sử đặt lịch";
+}
+
+<section class="history-page py-4">
+    <div class="container">
+        <h1 class="mb-4 text-warning">Lịch sử đặt lịch của bạn</h1>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-history text-center py-5">
+                <i class="fa-regular fa-calendar-xmark fa-3x text-muted mb-3"></i>
+                <p class="fs-5">Bạn chưa có lịch hẹn nào.</p>
+                <a asp-action="Create" class="btn btn-warning mt-2">Đặt lịch cắt tóc ngay</a>
+            </div>
+        }
+        else
+        {
+            <!-- Desktop Table View -->
+            <div class="d-none d-md-block table-responsive">
+                <table class="history-table table table-dark table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Dịch vụ</th>
+                            <th>Barber</th>
+                            <th>Ngày & Giờ hẹn</th>
+                            <th>Giá tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            bool canCancel = (item.Status == BarberShopBooking.Models.AppointmentStatus.Pending || item.Status == BarberShopBooking.Models.AppointmentStatus.Confirmed)
+                                            && (item.AppointmentDate.Date + item.AppointmentTime - DateTime.Now >= TimeSpan.FromHours(2));
+
+                            <tr>
+                                <td class="fw-bold text-warning">@item.Service?.ServiceName</td>
+                                <td>@item.Barber?.FullName</td>
+                                <td>
+                                    <i class="fa-regular fa-calendar me-1"></i> @item.AppointmentDate.ToString("dd/MM/yyyy")
+                                    <span class="ms-2 badge bg-secondary"><i class="fa-regular fa-clock me-1"></i> @item.AppointmentTime.ToString(@"hh\:mm")</span>
+                                </td>
+                                <td class="fw-bold">@item.PriceAtBooking.ToString("N0") VNĐ</td>
+                                <td>
+                                    <span class="status-badge @item.Status.ToCssClass()">
+                                        @item.Status.ToDisplayName()
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        @if (item.Status == BarberShopBooking.Models.AppointmentStatus.Completed)
+                                        {
+                                            if (item.BarberReview != null)
+                                            {
+                                                <span class="badge bg-success"><i class="fa-solid fa-star text-warning"></i> Đã đánh giá</span>
+                                            }
+                                            else
+                                            {
+                                                <a asp-controller="Review" asp-action="Create" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-outline-warning">
+                                                    <i class="fa-solid fa-star me-1"></i> Đánh giá
+                                                </a>
+                                            }
+                                        }
+
+                                        @if (canCancel)
+                                        {
+                                            <form asp-action="Cancel" asp-route-id="@item.AppointmentId" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn hủy lịch hẹn này?');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-solid fa-xmark me-1"></i> Hủy lịch
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                                <td><small class="text-muted">@(string.IsNullOrEmpty(item.Note) ? "-" : item.Note)</small></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="d-block d-md-none">
+                @foreach (var item in Model)
+                {
+                    bool canCancel = (item.Status == BarberShopBooking.Models.AppointmentStatus.Pending || item.Status == BarberShopBooking.Models.AppointmentStatus.Confirmed)
+                                    && (item.AppointmentDate.Date + item.AppointmentTime - DateTime.Now >= TimeSpan.FromHours(2));
+
+                    <div class="card bg-dark text-white border-warning mb-3 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title text-warning mb-0">@item.Service?.ServiceName</h5>
+                                <span class="status-badge @item.Status.ToCssClass()">
+                                    @item.Status.ToDisplayName()
+                                </span>
+                            </div>
+
+                            <p class="card-text mb-1"><strong><i class="fa-solid fa-user-tie me-1"></i> Barber:</strong> @item.Barber?.FullName</p>
+                            <p class="card-text mb-1"><strong><i class="fa-regular fa-calendar-days me-1"></i> Thời gian:</strong> @item.AppointmentTime.ToString(@"hh\:mm") - @item.AppointmentDate.ToString("dd/MM/yyyy")</p>
+                            <p class="card-text mb-2"><strong><i class="fa-solid fa-tag me-1"></i> Giá:</strong> <span class="text-warning fw-bold">@item.PriceAtBooking.ToString("N0") VNĐ</span></p>
+
+                            @if (!string.IsNullOrEmpty(item.Note))
+                            {
+                                <p class="card-text mb-2"><small class="text-muted"><i class="fa-regular fa-note-sticky me-1"></i> Ghi chú: @item.Note</small></p>
+                            }
+
+                            <div class="d-flex gap-2 mt-3 pt-2 border-top border-secondary">
+                                @if (item.Status == BarberShopBooking.Models.AppointmentStatus.Completed)
+                                {
+                                    if (item.BarberReview != null)
+                                    {
+                                        <span class="badge bg-success py-2 px-3"><i class="fa-solid fa-star text-warning"></i> Đã đánh giá</span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Review" asp-action="Create" asp-route-id="@item.AppointmentId" class="btn btn-sm btn-warning w-100 py-2">
+                                            <i class="fa-solid fa-star me-1"></i> Đánh giá Barber
+                                        </a>
+                                    }
+                                }
+
+                                @if (canCancel)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@item.AppointmentId" method="post" class="w-100" onsubmit="return confirm('Bạn có chắc chắn muốn hủy lịch hẹn này?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-danger w-100 py-2">
+                                            <i class="fa-solid fa-xmark me-1"></i> Hủy lịch hẹn
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

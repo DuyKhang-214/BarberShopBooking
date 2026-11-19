@@ -1,0 +1,77 @@
+@model List<BarberShopBooking.Models.Service>
+
+@{
+    ViewData["Title"] = "Quản lý Dịch vụ";
+}
+
+<section class="admin-page py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h1 class="text-warning h3 mb-0"><i class="fa-solid fa-scissors me-2"></i> Quản lý Dịch vụ cắt tóc</h1>
+            <a asp-action="Create" class="btn btn-warning">
+                <i class="fa-solid fa-plus me-1"></i> Thêm Dịch vụ mới
+            </a>
+        </div>
+
+        <div class="table-responsive bg-dark rounded p-3 border border-secondary">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Tên dịch vụ</th>
+                        <th>Thời lượng</th>
+                        <th>Giá niêm yết</th>
+                        <th>Nổi bật</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold text-warning">
+                                @s.ServiceName
+                                <br/><small class="text-muted fw-normal">@(string.IsNullOrEmpty(s.Description) ? "-" : s.Description)</small>
+                            </td>
+                            <td><span class="badge bg-secondary"><i class="fa-regular fa-clock me-1"></i> @s.DurationMinutes phút</span></td>
+                            <td class="fw-bold text-white">@s.Price.ToString("N0") VNĐ</td>
+                            <td>
+                                @if (s.IsFeatured)
+                                {
+                                    <span class="badge bg-warning text-dark"><i class="fa-solid fa-star me-1"></i> Nổi bật</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-dark border text-muted">Thường</span>
+                                }
+                            </td>
+                            <td>
+                                @if (s.IsActive)
+                                {
+                                    <span class="badge bg-success">Đang hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Tạm ngưng</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-1">
+                                    <a asp-action="Edit" asp-route-id="@s.ServiceId" class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                                        <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@s.ServiceId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn chuyển trạng thái/xóa dịch vụ này?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa/Khóa">
+                                            <i class="fa-solid fa-trash"></i> Xóa
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

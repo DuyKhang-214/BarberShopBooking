@@ -1,0 +1,100 @@
+@model List<BarberShopBooking.Models.Hairstyle>
+
+@{
+    ViewData["Title"] = "Kiểu tóc nổi bật";
+    var selected = ViewBag.SelectedCategory as string;
+}
+
+<section class="hairstyle-page">
+    <div class="container">
+        <div class="section-heading">
+            <h1 class="page-title">Kiểu tóc nổi bật của KD - BARBER</h1>
+            <p class="page-subtitle">
+                Khám phá các kiểu tóc, màu tóc và mẫu uốn được yêu thích.
+            </p>
+        </div>
+
+        <div class="hairstyle-layout">
+            <aside class="hairstyle-sidebar">
+                <h3>Danh mục</h3>
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   class="@(string.IsNullOrEmpty(selected) ? "active" : "")">
+                    Tất cả
+                </a>
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   asp-route-category="Kiểu tóc"
+                   class="@(selected == "Kiểu tóc" ? "active" : "")">
+                    Kiểu tóc
+                </a>
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   asp-route-category="Màu tóc"
+                   class="@(selected == "Màu tóc" ? "active" : "")">
+                    Màu tóc
+                </a>
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   asp-route-category="Uốn tóc"
+                   class="@(selected == "Uốn tóc" ? "active" : "")">
+                    Uốn tóc
+                </a>
+            </aside>
+
+            <div class="hairstyle-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="hairstyle-card">
+                        <div class="hairstyle-image-box">
+                            <img src="@item.ImageUrl" alt="@item.HairstyleName" />
+                        </div>
+
+                        <div class="hairstyle-content">
+                            <span class="hairstyle-category">@item.Category</span>
+                            <h3>@item.HairstyleName</h3>
+                            <p>@item.Description</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="hairstyle-pagination">
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   asp-route-category="@ViewBag.SelectedCategory"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   class="page-nav @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    ‹ Prev
+                </a>
+
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <a asp-controller="Hairstyle"
+                       asp-action="Index"
+                       asp-route-category="@ViewBag.SelectedCategory"
+                       asp-route-page="@i"
+                       class="@(ViewBag.CurrentPage == i ? "active" : "")">
+                        @i
+                    </a>
+                }
+
+                <a asp-controller="Hairstyle"
+                   asp-action="Index"
+                   asp-route-category="@ViewBag.SelectedCategory"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   class="page-nav @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                    Next ›
+                </a>
+            </div>
+        }
+    </div>
+</section>

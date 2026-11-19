@@ -1,0 +1,199 @@
+.hairstyle-page {
+    min-height: calc(100vh - 80px);
+    background:
+            linear-gradient(180deg, rgba(18,18,18,.8), rgba(18,18,18,.95)),
+            url("https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1600&auto=format&fit=crop&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 80px 0;
+}
+
+.hairstyle-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 42px;
+    align-items: start;
+    margin-top: 40px;
+    perspective: 1200px;
+}
+
+.hairstyle-sidebar {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-3d);
+    border: 1px solid var(--border-color);
+    position: sticky;
+    top: 100px;
+}
+
+.hairstyle-sidebar h3 {
+    background: linear-gradient(135deg, #1f1f1f 0%, #141414 100%);
+    color: var(--color-gold);
+    padding: 24px;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hairstyle-sidebar a {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    padding: 0 24px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-fast);
+}
+
+.hairstyle-sidebar a:hover,
+.hairstyle-sidebar a.active {
+    background: var(--color-gold);
+    color: #111;
+    font-weight: 800;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.hairstyle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    perspective: 1000px;
+}
+
+.hairstyle-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    transition: var(--transition-3d);
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.hairstyle-card:hover {
+    transform: translateY(-10px) rotateX(3deg) rotateY(-2deg) scale(1.02);
+    box-shadow: var(--shadow-3d);
+    border-color: var(--color-gold-glow);
+    background: var(--bg-card-hover);
+}
+
+.hairstyle-image-box {
+    width: 100%;
+    height: 280px;
+    background: #141414;
+    overflow: hidden;
+    position: relative;
+}
+
+.hairstyle-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hairstyle-card:hover .hairstyle-image-box img {
+    transform: scale(1.08);
+}
+
+.hairstyle-content {
+    padding: 24px;
+}
+
+.hairstyle-category {
+    display: inline-block;
+    background: rgba(245, 197, 66, 0.15);
+    color: var(--color-gold);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    border: 1px solid rgba(245, 197, 66, 0.3);
+}
+
+.hairstyle-content h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.hairstyle-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+@media(max-width: 992px) {
+    .hairstyle-layout {
+        grid-template-columns: 1fr;
+    }
+    .hairstyle-sidebar {
+        position: static;
+    }
+}
+
+.page-title {
+    font-size: 52px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--color-gold);
+    text-shadow: 0 10px 30px rgba(245, 197, 66, 0.3);
+}
+
+.page-subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: rgba(255,255,255,.9);
+    margin-bottom: 50px;
+}
+
+.hairstyle-pagination {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 50px 0;
+}
+
+.hairstyle-pagination a {
+    min-width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    transition: var(--transition-fast);
+}
+
+.hairstyle-pagination a.active {
+    background: var(--color-gold);
+    color: #111;
+    box-shadow: 0 4px 15px rgba(245, 197, 66, 0.4);
+}
+
+.hairstyle-pagination a:not(.active) {
+    background: var(--bg-card);
+    color: #fff;
+    border: 1px solid var(--border-color);
+}
+
+.hairstyle-pagination a:not(.active):hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+}

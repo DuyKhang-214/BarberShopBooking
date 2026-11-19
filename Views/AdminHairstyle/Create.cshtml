@@ -1,0 +1,55 @@
+@model BarberShopBooking.Models.Hairstyle
+
+@{
+    ViewData["Title"] = "Thêm Kiểu tóc mới";
+}
+
+<section class="admin-page py-4">
+    <div class="container" style="max-width: 600px;">
+        <div class="card bg-dark text-white border-warning p-4 shadow">
+            <h2 class="text-warning mb-4"><i class="fa-solid fa-plus me-2"></i> Thêm Kiểu tóc mới</h2>
+
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group mb-3">
+                    <label asp-for="HairstyleName" class="form-label">Tên kiểu tóc *</label>
+                    <input asp-for="HairstyleName" class="form-control bg-dark text-white border-secondary" placeholder="Ví dụ: Sidepart Modern, Undercut..." required />
+                    <span asp-validation-for="HairstyleName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Category" class="form-label">Danh mục phong cách</label>
+                    <select asp-for="Category" class="form-select bg-dark text-white border-secondary">
+                        <option value="Lịch Lãm">Lịch Lãm</option>
+                        <option value="Năng Động">Năng Động</option>
+                        <option value="Thời Trang">Thời Trang</option>
+                        <option value="Cổ Điển">Cổ Điển</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="form-label">Mô tả ngắn</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Mô tả đặc điểm kiểu tóc và khuôn mặt phù hợp..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Hình ảnh minh họa (.jpg, .png, .webp) *</label>
+                    <input type="file" name="imageFile" class="form-control bg-dark text-white border-secondary" accept="image/*" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning px-4">Lưu kiểu tóc</button>
+                    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

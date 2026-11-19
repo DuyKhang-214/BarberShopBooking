@@ -1,0 +1,59 @@
+@model List<BarberShopBooking.Models.BarberReview>
+
+@{
+    ViewData["Title"] = "Quản lý Đánh giá";
+}
+
+<section class="admin-page py-4">
+    <div class="container">
+        <h1 class="text-warning h3 mb-4"><i class="fa-solid fa-star me-2"></i> Quản lý Đánh giá từ Khách hàng</h1>
+
+        <div class="table-responsive bg-dark rounded p-3 border border-secondary">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Khách hàng</th>
+                        <th>Barber được đánh giá</th>
+                        <th>Dịch vụ sử dụng</th>
+                        <th>Đánh giá sao</th>
+                        <th>Nội dung nhận xét</th>
+                        <th>Ngày tạo</th>
+                        <th class="text-end">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@r.User?.FullName</strong>
+                                <br/><small class="text-muted">@@@r.User?.Username</small>
+                            </td>
+                            <td class="text-warning fw-bold">@r.Barber?.FullName</td>
+                            <td>@r.Appointment?.Service?.ServiceName</td>
+                            <td>
+                                <span class="text-warning">
+                                    @for (int i = 1; i <= r.Rating; i++)
+                                    {
+                                        <span>★</span>
+                                    }
+                                </span>
+                                <small class="text-muted">(@r.Rating/5)</small>
+                            </td>
+                            <td><small>@(string.IsNullOrEmpty(r.Comment) ? "Không có nhận xét" : r.Comment)</small></td>
+                            <td><small class="text-muted">@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small></td>
+                            <td class="text-end">
+                                <form asp-action="Delete" asp-route-id="@r.ReviewId" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa đánh giá này?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa đánh giá">
+                                        <i class="fa-solid fa-trash"></i> Xóa
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

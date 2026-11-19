@@ -1,0 +1,92 @@
+@model BarberShopBooking.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+
+<section class="auth-page">
+    <div class="auth-box">
+        <h2>Đăng ký tài khoản</h2>
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <form asp-action="Register" method="post" id="registerForm">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                    <i class="fa-regular fa-user"></i>
+                </div>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="FullName" class="form-control" placeholder="Nhập họ và tên" />
+                    <i class="fa-regular fa-id-card"></i>
+                </div>
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Nhập địa chỉ email" />
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Phone" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại (tùy chọn)" />
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="Password" id="password" type="password" class="form-control" placeholder="Tối thiểu 6 ký tự" />
+                    <i class="fa-regular fa-eye-slash toggle-password" data-target="password"></i>
+                </div>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <div class="input-icon">
+                    <input asp-for="ConfirmPassword" id="confirmPassword" type="password" class="form-control" placeholder="Nhập lại mật khẩu" />
+                    <i class="fa-regular fa-eye-slash toggle-password" data-target="confirmPassword"></i>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="terms">
+                    <input type="checkbox" id="agreeTerms" required />
+                    Tôi đồng ý với điều khoản dịch vụ
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" id="registerBtn">
+                Đăng ký ngay
+            </button>
+        </form>
+
+        <div class="auth-link mt-3 text-center">
+            Đã có tài khoản?
+            <a asp-controller="Account" asp-action="Login">Đăng nhập ngay</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Auth.js" asp-append-version="true"></script>
+}

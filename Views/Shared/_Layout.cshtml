@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="KD BarberShop - Dịch vụ cắt tóc nam chuyên nghiệp, uốn tạo kiểu, cạo râu và chăm sóc quý ông hàng đầu." />
+    <title>@ViewData["Title"] - KD BarberShop</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/responsive.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Header.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Footer.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Service.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Appointment.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Contact.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Hairstyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Review.css" asp-append-version="true" />
+</head>
+
+<body class="page-layout bg-dark text-white">
+
+<partial name="_Header"/>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+<main class="main-content">
+    @RenderBody()
+</main>
+
+<partial name="_Footer"/>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const hamburgerBtn = document.getElementById("hamburgerBtn");
+        const mainNav = document.getElementById("mainNav");
+        const userDropdownBtn = document.getElementById("userDropdownBtn");
+        const userDropdownMenu = document.getElementById("userDropdownMenu");
+
+        if (hamburgerBtn && mainNav) {
+            hamburgerBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                const isExpanded = hamburgerBtn.getAttribute("aria-expanded") === "true";
+                hamburgerBtn.setAttribute("aria-expanded", !isExpanded);
+                mainNav.classList.toggle("open");
+            });
+
+            // Close mobile menu on click outside
+            document.addEventListener("click", function (e) {
+                if (!mainNav.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    mainNav.classList.remove("open");
+                    hamburgerBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        if (userDropdownBtn && userDropdownMenu) {
+            userDropdownBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                const isOpen = userDropdownMenu.classList.contains("show");
+                userDropdownMenu.classList.toggle("show");
+                userDropdownBtn.setAttribute("aria-expanded", !isOpen);
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!userDropdownMenu.contains(e.target) && !userDropdownBtn.contains(e.target)) {
+                    userDropdownMenu.classList.remove("show");
+                    userDropdownBtn.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+    });
+
+    function confirmDelete(button) {
+        Swal.fire({
+            title: 'Xác nhận xóa',
+            text: 'Bạn có chắc chắn muốn xóa mục này không?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Chắc chắn xóa',
+            cancelButtonText: 'Hủy bỏ',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                button.closest('form').submit();
+            }
+        });
+    }
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

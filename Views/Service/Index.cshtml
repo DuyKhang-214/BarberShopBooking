@@ -1,0 +1,91 @@
+@model List<BarberShopBooking.Models.Service>
+
+@{
+    ViewData["Title"] = "Dịch vụ";
+}
+
+<link rel="stylesheet" href="~/css/service.css" />
+
+<section class="service-page">
+
+    <div class="service-header">
+        <h1>Những dịch vụ của KD - BARBER </h1>
+        <p>Chọn dịch vụ phù hợp với nhu cầu và sở thich của bạn.</p>
+    </div>
+
+    <div class="service-grid">
+
+        @foreach (var item in Model)
+        {
+            <div class="service-card">
+
+                @{
+                    var iconClass = "fa-solid fa-scissors";
+
+                    if (item.ServiceName.Contains("gội", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-shower";
+                    }
+                    else 
+                        
+                    if (item.ServiceName.Contains("uốn", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-wind";
+                    }
+                    else 
+                        
+                    if (item.ServiceName.Contains("nhuộm", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-palette";
+                    }
+                    else 
+                        
+                    if (item.ServiceName.Contains("cạo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-user";
+                    }
+                    else 
+                        
+                    if (item.ServiceName.Contains("massage", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-spa";
+                    }
+                    else 
+                        
+                    if (item.ServiceName.Contains("combo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        iconClass = "fa-solid fa-star";
+                    }
+                }
+
+                <div class="service-icon">
+                    <i class="@iconClass"></i>
+                </div>
+
+                <h3>@item.ServiceName</h3>
+
+                <p>@item.Description</p>
+
+                <div class="service-info">
+                    <span>@item.DurationMinutes phút</span>
+                </div>
+
+                <div class="service-price">
+                    @item.Price.ToString("N0") VNĐ
+                </div>
+
+                <a asp-controller="Appointment"
+                   asp-action="Create"
+                   asp-route-serviceId="@item.ServiceId"
+                   class="book-btn">
+                    Đặt lịch ngay
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+<script src="~/js/service.js"></script>
