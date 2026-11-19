@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 *.swp
 .local/
 .nuget/
+appsettings.Production.json
